@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Suscripciones</title>
+
+  <style>
+    /* Estilos generales de la aplicación */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #243047;
+    }
+
+    header {
+      background: #263b80;
+      color: white;
+      padding: 25px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 27px;
+    }
+
+    header p {
+      margin: 0;
+      color: #e0e6ff;
+    }
+
+    main {
+      max-width: 1050px;
+      margin: 25px auto;
+      padding: 0 16px;
+    }
+
+    /* Tarjetas de resumen */
+    .resumen {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .tarjeta {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #15264a0d;
+    }
+
+    .tarjeta p {
+      margin: 0 0 10px;
+      color: #68738a;
+      font-size: 14px;
+    }
+
+    .tarjeta h2 {
+      margin: 0;
+      font-size: 25px;
+      color: #263b80;
+    }
+
+    /* Formulario */
+    .seccion {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 3px 12px #15264a0d;
+    }
+
+    .seccion h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .formulario {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .campo.completo {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid #d5dbea;
+      border-radius: 7px;
+      background: white;
+      font-size: 15px;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid #9eafff;
+      border-color: #526bd5;
+    }
+
+    button {
+      border: none;
+      padding: 11px 15px;
+      border-radius: 7px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .principal {
+      background: #304ca6;
+      color: white;
+    }
+
+    .secundario {
+      background: #e9edf7;
+      color: #263b80;
+    }
+
+    .eliminar {
+      background: #fde8e8;
+      color: #a51d2d;
+    }
+
+    .acciones-formulario {
+      display: flex;
+      gap: 10px;
+      grid-column: 1 / -1;
+      flex-wrap: wrap;
+    }
+
+    /* Lista de suscripciones */
+    .encabezado-lista {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .encabezado-lista h2 {
+      margin: 0;
+    }
+
+    .lista {
+      display: grid;
+      gap: 14px;
+    }
+
+    .suscripcion {
+      border: 1px solid #e1e6f0;
+      border-radius: 10px;
+      padding: 17px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .datos {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .datos h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      overflow-wrap: anywhere;
+    }
+
+    .datos p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #68738a;
+    }
+
+    .precio {
+      font-size: 19px;
+      font-weight: bold;
+      color: #263b80;
+    }
+
+    .etiqueta {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    .alerta {
+      background: #fff0d5;
+      color: #8a5100;
+    }
+
+    .vencida {
+      background: #fde5e5;
+      color: #a51d2d;
+    }
+
+    .normal {
+      background: #e4f7eb;
+      color: #17683b;
+    }
+
+    .acciones {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .vacio {
+      text-align: center;
+      padding: 30px 10px;
+      color: #68738a;
+    }
+
+    footer {
+      text-align: center;
+      color: #68738a;
+      font-size: 13px;
+      padding: 10px 16px 28px;
+    }
+
+    /* Adaptación para teléfonos */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 23px;
+      }
+
+      .resumen {
+        grid-template-columns: 1fr;
+      }
+
+      .formulario {
+        grid-template-columns: 1fr;
+      }
+
+      .campo.completo,
+      .acciones-formulario {
+        grid-column: auto;
+      }
+
+      .suscripcion {
+        align-items: flex-start;
+      }
+
+      .acciones {
+        width: 100%;
+      }
+
+      .acciones button {
+        flex: 1;
+      }
+
+      .seccion {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Mis Suscripciones</h1>
+    <p>Organiza tus pagos y controla tus gastos.</p>
+  </header>
+
+  <main>
+    <!-- Resumen de gastos y vencimientos -->
+    <section class="resumen">
+      <div class="tarjeta">
+        <p>Gasto mensual estimado</p>
+        <h2 id="totalMensual">$0,00</h2>
+      </div>
+
+      <div class="tarjeta">
+        <p>Pagos en los próximos 7 días</p>
+        <h2 id="totalProximos">0</h2>
+      </div>
+    </section>
+
+    <!-- Formulario para crear o editar suscripciones -->
+    <section class="seccion">
+      <h2 id="tituloFormulario">Agregar suscripción</h2>
+
+      <form id="formulario" class="formulario">
+        <input type="hidden" id="idSuscripcion">
+
+        <div class="campo">
+          <label for="nombre">Nombre del servicio</label>
+          <input
+            type="text"
+            id="nombre"
+            placeholder="Ej. Netflix"
+            maxlength="80"
+            required
+          >
+        </div>
+
+        <div class="campo">
+          <label for="costo">Costo en dólares ($)</label>
+          <input
+            type="number"
+            id="costo"
+            min="0.01"
+            max="100000000"
+            step="0.01"
+            placeholder="Ej. 9.99"
+            required
+          >
+        </div>
+
+        <div class="campo">
+          <label for="frecuencia">Frecuencia de pago</label>
+          <select id="frecuencia" required>
+            <option value="mensual">Mensual</option>
+            <option value="anual">Anual</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="fecha">Fecha del próximo pago</label>
+          <input type="date" id="fecha" required>
+        </div>
+
+        <div class="campo completo">
+          <label for="categoria">Categoría</label>
+          <select id="categoria" required>
+            <option value="Entretenimiento">Entretenimiento</option>
+            <option value="Música">Música</option>
+            <option value="Educación">Educación</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Videojuegos">Videojuegos</option>
+            <option value="Almacenamiento">Almacenamiento</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+
+        <div class="acciones-formulario">
+          <button type="submit" class="principal" id="botonGuardar">
+            Guardar suscripción
+          </button>
+
+          <button
+            type="button"
+            class="secundario"
+            id="botonCancelar"
+            hidden
+          >
+            Cancelar edición
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Lista ordenada por la fecha de pago más cercana -->
+    <section class="seccion">
+      <div class="encabezado-lista">
+        <h2>Mis servicios</h2>
+
+        <button
+          type="button"
+          class="secundario"
+          id="botonAgregar"
+        >
+          + Nueva suscripción
+        </button>
+      </div>
+
+      <div id="lista" class="lista"></div>
+    </section>
+  </main>
+
+  <footer>
+    Los datos se guardan en este navegador y en este dispositivo.
+  </footer>
+
+  <script>
+    // Clave utilizada para guardar los datos en el navegador.
+    const CLAVE = "misSuscripcionesUIDE";
+
+    // Obtener los elementos del HTML.
+    const formulario = document.getElementById("formulario");
+    const lista = document.getElementById("lista");
+    const nombre = document.getElementById("nombre");
+    const costo = document.getElementById("costo");
+    const frecuencia = document.getElementById("frecuencia");
+    const fecha = document.getElementById("fecha");
+    const categoria = document.getElementById("categoria");
+    const idSuscripcion = document.getElementById("idSuscripcion");
+
+    // Cargar los datos guardados. Si no existen, iniciar una lista vacía.
+    let suscripciones = [];
+
+    try {
+      const datosGuardados = localStorage.getItem(CLAVE);
+      const datos = datosGuardados ? JSON.parse(datosGuardados) : [];
+
+      if (Array.isArray(datos)) {
+        suscripciones = datos.filter(s =>
+          s &&
+          typeof s.id === "string" &&
+          typeof s.nombre === "string" &&
+          Number.isFinite(Number(s.costo)) &&
+          Number(s.costo) > 0 &&
+          ["mensual", "anual"].includes(s.frecuencia) &&
+          /^\d{4}-\d{2}-\d{2}$/.test(s.fecha) &&
+          !Number.isNaN(obtenerFecha(s.fecha).getTime()) &&
+          typeof s.categoria === "string"
+        );
+      }
+    } catch (error) {
+      console.error("No se pudieron leer los datos guardados.", error);
+    }
+
+    // Guardar la lista actual en el almacenamiento local.
+    function guardarDatos() {
+      try {
+        localStorage.setItem(CLAVE, JSON.stringify(suscripciones));
+        return true;
+      } catch (error) {
+        alert("No se pudieron guardar los datos. Revisa el almacenamiento del navegador.");
+        return false;
+      }
+    }
+
+    // Interpretar una fecha sin problemas de zona horaria.
+    function obtenerFecha(valor) {
+      const partes = valor.split("-").map(Number);
+      return new Date(partes[0], partes[1] - 1, partes[2]);
+    }
+
+    // Obtener la fecha de hoy a medianoche.
+    function hoyLocal() {
+      const hoy = new Date();
+      return new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    }
+
+    // Calcular la diferencia de días entre hoy y un vencimiento.
+    function diasRestantes(valor) {
+      const diferencia = obtenerFecha(valor).getTime() - hoyLocal().getTime();
+      return Math.round(diferencia / 86400000);
+    }
+
+    // Mostrar una fecha en formato local.
+    function formatearFecha(valor) {
+      return obtenerFecha(valor).toLocaleDateString("es-EC", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    // Mostrar valores monetarios en dólares estadounidenses.
+    function dinero(valor) {
+      return new Intl.NumberFormat("es-EC", {
+        style: "currency",
+        currency: "USD"
+      }).format(valor);
+    }
+
+    // Calcular el gasto mensual equivalente de cada suscripción.
+    function gastoMensual(s) {
+      const importe = Number(s.costo);
+      return s.frecuencia === "anual" ? importe / 12 : importe;
+    }
+
+    // Actualizar el resumen y dibujar la lista de suscripciones.
+    function renderizar() {
+      // Ordenar las suscripciones por fecha más próxima.
+      const ordenadas = [...suscripciones].sort((a, b) =>
+        a.fecha.localeCompare(b.fecha)
+      );
+
+      // Sumar el gasto mensual estimado.
+      const total = suscripciones.reduce(
+        (suma, s) => suma + gastoMensual(s), 0
+      );
+
+      // Contar los pagos que vencen entre hoy y los próximos siete días.
+      const proximos = suscripciones.filter(s => {
+        const dias = diasRestantes(s.fecha);
+        return dias >= 0 && dias <= 7;
+      }).length;
+
+      document.getElementById("totalMensual").textContent = dinero(total);
+      document.getElementById("totalProximos").textContent = proximos;
+
+      // Mostrar un mensaje cuando todavía no hay suscripciones.
+      lista.replaceChildren();
+
+      if (ordenadas.length === 0) {
+        const mensaje = document.createElement("p");
+        mensaje.className = "vacio";
+        mensaje.textContent =
+          "Todavía no tienes suscripciones. Agrega la primera en el formulario.";
+        lista.appendChild(mensaje);
+        return;
+      }
+
+      // Crear una tarjeta por cada suscripción.
+      ordenadas.forEach(s => {
+        const dias = diasRestantes(s.fecha);
+        const tarjeta = document.createElement("article");
+        tarjeta.className = "suscripcion";
+
+        const datos = document.createElement("div");
+        datos.className = "datos";
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = s.nombre;
+
+        const detalle = document.createElement("p");
+        detalle.textContent =
+          "Categoría: " + s.categoria + " · Pago " +
+          (s.frecuencia === "anual" ? "anual" : "mensual");
+
+        const proximoPago = document.createElement("p");
+        proximoPago.textContent = "Próximo pago: " + formatearFecha(s.fecha);
+
+        const etiqueta = document.createElement("span");
+        etiqueta.className = "etiqueta";
+
+        // Identificar pagos vencidos y próximos.
+        if (dias < 0) {
+          etiqueta.classList.add("vencida");
+          etiqueta.textContent = "Pago vencido";
+        } else if (dias <= 7) {
+          etiqueta.classList.add("alerta");
+          etiqueta.textContent = dias === 0
+            ? "Vence hoy"
+            : "Vence en " + dias + (dias === 1 ? " día" : " días");
+        } else {
+          etiqueta.classList.add("normal");
+          etiqueta.textContent = "Pago programado";
+        }
+
+        const precio = document.createElement("p");
+        precio.className = "precio";
+        precio.textContent = dinero(Number(s.costo)) +
+          (s.frecuencia === "anual" ? " / año" : " / mes");
+
+        datos.append(titulo, detalle, proximoPago, etiqueta, precio);
+
+        const acciones = document.createElement("div");
+        acciones.className = "acciones";
+
+        const editar = document.createElement("button");
+        editar.type = "button";
+        editar.className = "secundario";
+        editar.textContent = "Editar";
+        editar.addEventListener("click", () => editarSuscripcion(s.id));
+
+        const eliminar = document.createElement("button");
+        eliminar.type = "button";
+        eliminar.className = "eliminar";
+        eliminar.textContent = "Eliminar";
+        eliminar.addEventListener("click", () => eliminarSuscripcion(s.id));
+
+        acciones.append(editar, eliminar);
+        tarjeta.append(datos, acciones);
+        lista.appendChild(tarjeta);
+      });
+    }
+
+    // Registrar una nueva suscripción o guardar los cambios de una existente.
+    formulario.addEventListener("submit", function(evento) {
+      evento.preventDefault();
+
+      if (!formulario.reportValidity()) return;
+
+      const importe = Number(costo.value);
+
+      if (!Number.isFinite(importe) || importe <= 0) {
+        alert("Ingresa un costo válido mayor que cero.");
+        return;
+      }
+
+      const id = idSuscripcion.value;
+
+      const registro = {
+        id: id || (
+          typeof crypto !== "undefined" && crypto.randomUUID
+            ? crypto.randomUUID()
+            : String(Date.now()) + Math.random().toString(36).slice(2)
+        ),
+        nombre: nombre.value.trim(),
+        costo: importe,
+        frecuencia: frecuencia.value,
+        fecha: fecha.value,
+        categoria: categoria.value
+      };
+
+      if (!registro.nombre) {
+        alert("Ingresa el nombre del servicio.");
+        return;
+      }
+
+      if (id) {
+        // Actualizar el registro existente.
+        const indice = suscripciones.findIndex(s => s.id === id);
+        if (indice === -1) return;
+        suscripciones[indice] = registro;
+      } else {
+        // Agregar una suscripción nueva.
+        suscripciones.push(registro);
+      }
+
+      if (!guardarDatos()) return;
+
+      limpiarFormulario();
+      renderizar();
+    });
+
+    // Cargar una suscripción en el formulario para editarla.
+    function editarSuscripcion(id) {
+      const s = suscripciones.find(item => item.id === id);
+      if (!s) return;
+
+      idSuscripcion.value = s.id;
+      nombre.value = s.nombre;
+      costo.value = s.costo;
+      frecuencia.value = s.frecuencia;
+      fecha.value = s.fecha;
+      categoria.value = s.categoria;
+
+      document.getElementById("tituloFormulario").textContent =
+        "Editar suscripción";
+      document.getElementById("botonGuardar").textContent =
+        "Guardar cambios";
+      document.getElementById("botonCancelar").hidden = false;
+
+      formulario.scrollIntoView({ behavior: "smooth", block: "start" });
+      nombre.focus();
+    }
+
+    // Eliminar una suscripción después de pedir confirmación.
+    function eliminarSuscripcion(id) {
+      const s = suscripciones.find(item => item.id === id);
+      if (!s) return;
+
+      if (!confirm('¿Deseas eliminar la suscripción "' + s.nombre + '"?')) {
+        return;
+      }
+
+      const anteriores = suscripciones;
+      suscripciones = suscripciones.filter(item => item.id !== id);
+
+      if (!guardarDatos()) {
+        suscripciones = anteriores;
+        return;
+      }
+
+      if (idSuscripcion.value === id) {
+        limpiarFormulario();
+      }
+
+      renderizar();
+    }
+
+    // Restablecer el formulario a su estado inicial.
+    function limpiarFormulario() {
+      formulario.reset();
+      idSuscripcion.value = "";
+
+      document.getElementById("tituloFormulario").textContent =
+        "Agregar suscripción";
+      document.getElementById("botonGuardar").textContent =
+        "Guardar suscripción";
+      document.getElementById("botonCancelar").hidden = true;
+    }
+
+    // Permitir cancelar una edición.
+    document.getElementById("botonCancelar").addEventListener(
+      "click", limpiarFormulario
+    );
+
+    // Facilitar el acceso al formulario desde la lista.
+    document.getElementById("botonAgregar").addEventListener("click", () => {
+      limpiarFormulario();
+      formulario.scrollIntoView({ behavior: "smooth", block: "start" });
+      nombre.focus();
+    });
+
+    // Mostrar los datos guardados al abrir la aplicación.
+    renderizar();
+  </script>
+</body>
+</html>
